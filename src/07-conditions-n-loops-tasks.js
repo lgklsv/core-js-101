@@ -216,8 +216,11 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  let numStr = [a, b].sort((c, d) => c - d).join(', ');
+  numStr = isStartIncluded ? `[${numStr}` : `(${numStr}`;
+  numStr = isEndIncluded ? `${numStr}]` : `${numStr})`;
+  return numStr;
 }
 
 
@@ -371,8 +374,8 @@ function isBracketsBalanced(str) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -388,8 +391,18 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let position = 0;
+  for (let i = 0; i < pathes[0].length; i += 1) {
+    if (pathes.every((str) => str[i] === pathes[0][i])) {
+      position += 1;
+    } else {
+      break;
+    }
+  }
+  if (position === 0) return '';
+  const endIndex = pathes[0].lastIndexOf('/', position - 1);
+  return pathes[0].slice(0, endIndex + 1);
 }
 
 
@@ -411,8 +424,25 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const matrix1Len = m1.length;
+  const matrix1Height = m1[0].length;
+  const matrix2Len = m2.length;
+  const matrix2Height = m2[0].length;
+  if (matrix1Height !== matrix2Len) return 'Can\'t multiply';
+
+  const resMatrix = Array(matrix1Len);
+  for (let i = 0; i < resMatrix.length; i += 1) {
+    resMatrix[i] = Array(matrix2Height).fill(0);
+  }
+  for (let x = 0; x < resMatrix.length; x += 1) {
+    for (let y = 0; y < resMatrix[x].length; y += 1) {
+      for (let z = 0; z < matrix1Height; z += 1) {
+        resMatrix[x][y] += m1[x][z] * m2[z][y];
+      }
+    }
+  }
+  return resMatrix;
 }
 
 
@@ -446,8 +476,29 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const rightArr = position.map((arr) => {
+    if (arr.length !== 3) {
+      arr.push(undefined);
+    }
+    return arr;
+  });
+  function checkWin(cell1, cell2, cell3) {
+    const flatPosition = rightArr.flat();
+    if (!flatPosition[cell1] || !flatPosition[cell2] || !flatPosition[cell3]) return undefined;
+    if (flatPosition[cell1] !== flatPosition[cell2]) return undefined;
+    if (flatPosition[cell1] !== flatPosition[cell3]) return undefined;
+    return flatPosition[cell1];
+  }
+
+  return checkWin(0, 1, 2)
+  || checkWin(3, 4, 5)
+  || checkWin(6, 7, 8)
+  || checkWin(0, 3, 6)
+  || checkWin(1, 4, 7)
+  || checkWin(2, 5, 8)
+  || checkWin(0, 4, 8)
+  || checkWin(6, 4, 2);
 }
 
 
